@@ -7,6 +7,7 @@ include(dirname(__FILE__).'/checkout.php');
 	$credit_card_processed	= $_REQUEST['credit_card_processed'];
 	$order_number			= $_REQUEST['order_number'];
 	$cart_id 				= $_REQUEST['cart_id'];
+    $secure_key             = $_REQUEST['secure_key'];
 
 $cart=new Cart($cart_id);
 

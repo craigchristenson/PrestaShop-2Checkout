@@ -123,6 +123,7 @@ class checkout extends PaymentModule
 		$total				= number_format($cart->getOrderTotal(true, 3), 2, '.', '');
 		$cart_order_id		= $cart->id;
 		$email				= $customer->email;
+		$secure_key			= $customer->secure_key;
 
 		$demo				= "N";	// Change to "Y" for demo mode
 		$outside_state		= "XX"; // This will pre-select Outside USA and Canada, if state does not exist
@@ -155,6 +156,7 @@ class checkout extends PaymentModule
 			'email'					=> $email,
 			'demo' 					=> $demo,
 			'outside_state'			=> $outside_state,
+			'secure_key'					=> $secure_key,
 
 			'card_holder_name'		=> $card_holder_name,
 			'street_address'		=> $street_address,

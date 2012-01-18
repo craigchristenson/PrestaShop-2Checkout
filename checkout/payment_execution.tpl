@@ -5,13 +5,13 @@
     </div>
 		{assign var='current_step' value='payment'}
 {include file="$tpl_dir./order-steps.tpl"}
-    
+
 <p>
 	<img src="{$this_path}2Checkout.gif" alt="{l s='2checkout' mod='checkout'}" style="float:left; margin: 0px 10px 5px 0px;" />
 	{l s='You have chosen to pay by credit card - Online validation.' mod='checkout'}
 </p>
 <p>
-	<b>{l s='Please confirm your order by clicking \'I confirm my order\'' mod='checkout'}.</b>
+	<b>{l s='Please test confirm your order by clicking \'I confirm my order\'' mod='checkout'}.</b>
 </p>
 
 
@@ -51,6 +51,7 @@
     <input type="hidden" name="email" value="{$email}" />
     <input type="hidden" name="phone" value="{$phone}" />
     <input type="hidden" name="demo" value="{$demo}" />
+	<input type="hidden" name="secure_key" value="{$secure_key}" />
     <input type="hidden" name="return_url" value="{$return_url}" />
     <p>
     <button style="background: url({$img_dir}button-medium.gif) no-repeat top left;" type="submit" name="submit" value="{l s='I confirm my order' mod='checkout'}" class="boton_mid img_png exclusive right">
