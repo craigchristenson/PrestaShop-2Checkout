@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>checkout</name>
-	<displayName>2Checkout Payments</displayName>
+	<displayName>2Checkout.com</displayName>
 	<version>0.4</version>
 	<description>Accept payments with 2Checkout</description>
 	<author></author>

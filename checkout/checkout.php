@@ -10,7 +10,7 @@ class checkout extends PaymentModule
 		$this->name = 'checkout';
 		$this->displayName = '2Checkout Payments';
 		$this->tab = 'payments_gateways';
-		$this->version = 0.4; // Module created by Alpha Media (18 July 2008)
+		$this->version = 0.6;
 
 		$config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_CURRENCIES'));
 
