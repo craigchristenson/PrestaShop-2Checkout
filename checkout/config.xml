@@ -2,7 +2,7 @@
 <module>
 	<name>checkout</name>
 	<displayName>2Checkout.com</displayName>
-	<version>0.4</version>
+	<version>0.7</version>
 	<description>Accept payments with 2Checkout</description>
 	<author></author>
 	<tab>payments_gateways</tab>

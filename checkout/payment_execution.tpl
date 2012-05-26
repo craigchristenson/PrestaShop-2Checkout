@@ -52,7 +52,7 @@
     <input type="hidden" name="phone" value="{$phone}" />
     <input type="hidden" name="demo" value="{$demo}" />
 	<input type="hidden" name="secure_key" value="{$secure_key}" />
-    <input type="hidden" name="return_url" value="{$return_url}" />
+    <input type="hidden" name="x_receipt_link_url" value="{$x_receipt_link_url}" />
     <p>
     <button style="background: url({$img_dir}button-medium.gif) no-repeat top left;" type="submit" name="submit" value="{l s='I confirm my order' mod='checkout'}" class="boton_mid img_png exclusive right">
 {l s='I confirm my order' mod='checkout'}

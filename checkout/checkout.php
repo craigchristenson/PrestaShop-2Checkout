@@ -10,12 +10,14 @@ class checkout extends PaymentModule
 		$this->name = 'checkout';
 		$this->displayName = '2Checkout Payments';
 		$this->tab = 'payments_gateways';
-		$this->version = 0.6;
+		$this->version = 0.7;
 
-		$config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_CURRENCIES'));
+		$config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_SECRET', 'CHECKOUT_CURRENCIES'));
 
 		if (isset($config['CHECKOUT_SID']))
 			$this->SID = $config['CHECKOUT_SID'];
+		if (isset($config['CHECKOUT_SECRET']))
+			$this->SECRET = $config['CHECKOUT_SECRET'];
 		if (isset($config['CHECKOUT_CURRENCIES']))
 			$this->currencies = $config['CHECKOUT_CURRENCIES'];
 
@@ -60,6 +62,7 @@ class checkout extends PaymentModule
 	function uninstall()
 	{
 		Configuration::deleteByName('CHECKOUT_SID');
+		Configuration::deleteByName('CHECKOUT_SECRET');
 		Configuration::deleteByName('CHECKOUT_CURRENCIES');
 		parent::uninstall();
 	}
@@ -265,6 +268,7 @@ class checkout extends PaymentModule
 		if (isset($_POST['btnSubmit']))
 		{
 			Configuration::updateValue('CHECKOUT_SID', $_POST['SID']);
+			Configuration::updateValue('CHECKOUT_SECRET', $_POST['SECRET']);
 		}
 		elseif (isset($_POST['currenciesSubmit']))
 		{
@@ -306,10 +310,13 @@ class checkout extends PaymentModule
 	private function _displayForm()
 	{
 		$modcheckout			= $this->l('2Checkout Setup');
-		$modcheckoutDesc		= $this->l('Please specify the 2Checkout account number');
+		$modcheckoutDesc		= $this->l('Please specify the 2Checkout account number and secret word.');
 
-		$modClientLabel			= $this->l('Account Number');
-		$modClientValue			= $this->SID;
+		$modClientLabelSid		= $this->l('2Checkout Account Number');
+		$modClientValueSid		= $this->SID;
+
+		$modClientLabelSecret	= $this->l('Secret Word');
+		$modClientValueSecret	= $this->SECRET;
 
 		$modCurrencies			= $this->l('Currencies');
 		$modUpdateSettings 		= $this->l('Update settings');
@@ -327,9 +334,15 @@ class checkout extends PaymentModule
 						</td>
 					</tr>
 					<tr>
-						<td width='130'>{$modClientLabel}</td>
+						<td width='130'>{$modClientLabelSid}</td>
 						<td>
-							<input type='text' name='SID' value='{$modClientValue}' style='width: 300px;' />
+							<input type='text' name='SID' value='{$modClientValueSid}' style='width: 300px;' />
+						</td>
+					</tr>
+					<tr>
+						<td width='130'>{$modClientLabelSecret}</td>
+						<td>
+							<input type='text' name='SECRET' value='{$modClientValueSecret}' style='width: 300px;' />
 						</td>
 					</tr>
 					<tr>
