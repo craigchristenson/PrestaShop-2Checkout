@@ -121,7 +121,7 @@ class checkout extends PaymentModule
 			}
 
 		$CheckoutUrl		= 'https://www.2checkout.com/checkout/spurchase';
-		$return_url			= 'http://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/checkout/validation.php';
+		$x_receipt_link_url			= 'http://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/checkout/validation.php';
 		$sid				= Configuration::get('CHECKOUT_SID');
 		$total				= number_format($cart->getOrderTotal(true, 3), 2, '.', '');
 		$cart_order_id		= $cart->id;
@@ -179,6 +179,8 @@ class checkout extends PaymentModule
         	'ship_country'			=> $ship_country,
 
 			'products' 				=> $products,
+
+			'x_receipt_link_url'		=> $x_receipt_link_url,
 
 			'TotalAmount' 		=> number_format($cart->getOrderTotal(true, 3), 2, '.', ''),
        		'this_path' 		=> $this->_path,
