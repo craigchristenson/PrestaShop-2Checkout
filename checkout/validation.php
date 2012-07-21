@@ -12,7 +12,7 @@ $cart_id 				= $_REQUEST['cart_id'];
 $secure_key             = $_REQUEST['secure_key'];
 
 $cart=new Cart($cart_id);
-$total = floatval(number_format($cart->getOrderTotal(true, 3), 2, '.', ''));
+$total = number_format($cart->getOrderTotal(true, 3), 2, '.', '');
 
 //Check the hash
 if ($_REQUEST['demo'] == 'Y') {
