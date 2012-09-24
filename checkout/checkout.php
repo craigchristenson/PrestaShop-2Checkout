@@ -104,21 +104,21 @@ class checkout extends PaymentModule
 
 		//Verify currencies and display payment form
 
-			$currencies = Currency::getCurrencies();
-			$authorized_currencies = array_flip(explode(',', $this->currencies));
-			$currencies_used = array();
-			foreach ($currencies as $key => $currency)
-				if (isset($authorized_currencies[$currency['id_currency']]))
-					$currencies_used[] = $currencies[$key];
+		$currencies = Currency::getCurrencies();
+		$authorized_currencies = array_flip(explode(',', $this->currencies));
+		$currencies_used = array();
+		foreach ($currencies as $key => $currency)
+			if (isset($authorized_currencies[$currency['id_currency']]))
+				$currencies_used[] = $currencies[$key];
 
-            $smarty->assign('currencies_used',$currencies_used);
+        $smarty->assign('currencies_used',$currencies_used);
 
-			$products = $cart->getProducts();
-			foreach ($products as $key => $product)
-			{
-				$products[$key]['name'] = str_replace('"', '\'', $product['name']);
-				$products[$key]['name'] = htmlentities(utf8_decode($product['name']));
-			}
+		$products = $cart->getProducts();
+		foreach ($products as $key => $product)
+		{
+			$products[$key]['name'] = str_replace('"', '\'', $product['name']);
+			$products[$key]['name'] = htmlentities(utf8_decode($product['name']));
+		}
 
 		$CheckoutUrl		= 'https://www.2checkout.com/checkout/spurchase';
 		$x_receipt_link_url			= 'http://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/checkout/validation.php';
@@ -150,41 +150,39 @@ class checkout extends PaymentModule
         $ship_zip				= $delivery->postcode;
         $ship_country			= $delivery->country;
 
-        	$smarty->assign(array(
-			'CheckoutUrl' 			=> $CheckoutUrl,
-			'return_url' 			=> $return_url,
-			'sid' 					=> $sid,
-			'total'			 		=> $total,
-			'cart_order_id'		 	=> $cart_order_id,
-			'email'					=> $email,
-			'demo' 					=> $demo,
-			'outside_state'			=> $outside_state,
-			'secure_key'					=> $secure_key,
+    	$smarty->assign(array(
+		'CheckoutUrl' 			=> $CheckoutUrl,
+		'sid' 					=> $sid,
+		'total'			 		=> $total,
+		'cart_order_id'		 	=> $cart_order_id,
+		'email'					=> $email,
+		'outside_state'			=> $outside_state,
+		'secure_key'					=> $secure_key,
 
-			'card_holder_name'		=> $card_holder_name,
-			'street_address'		=> $street_address,
-    	    'street_address2'		=> $street_address2,
-			'phone'					=> $phone,
-			'city' 					=> $city,
-			'state' 				=> $state,
-        	'zip'					=> $zip,
-        	'country'				=> $country,
+		'card_holder_name'		=> $card_holder_name,
+		'street_address'		=> $street_address,
+	    'street_address2'		=> $street_address2,
+		'phone'					=> $phone,
+		'city' 					=> $city,
+		'state' 				=> $state,
+    	'zip'					=> $zip,
+    	'country'				=> $country,
 
-			'ship_name'				=> $ship_name,
-			'ship_street_address'	=> $ship_street_address,
-    	    'ship_street_address2'	=> $ship_street_address2,
-			'ship_city' 			=> $ship_city,
-			'ship_state' 			=> $ship_state,
-        	'ship_zip'				=> $ship_zip,
-        	'ship_country'			=> $ship_country,
+		'ship_name'				=> $ship_name,
+		'ship_street_address'	=> $ship_street_address,
+	    'ship_street_address2'	=> $ship_street_address2,
+		'ship_city' 			=> $ship_city,
+		'ship_state' 			=> $ship_state,
+    	'ship_zip'				=> $ship_zip,
+    	'ship_country'			=> $ship_country,
 
-			'products' 				=> $products,
+		'products' 				=> $products,
 
-			'x_receipt_link_url'		=> $x_receipt_link_url,
+		'x_receipt_link_url'		=> $x_receipt_link_url,
 
-			'TotalAmount' 		=> number_format($cart->getOrderTotal(true, 3), 2, '.', ''),
-       		'this_path' 		=> $this->_path,
-       	    'this_path_ssl' 	=> Configuration::get('PS_FO_PROTOCOL').$_SERVER['HTTP_HOST'].__PS_BASE_URI__."modules/{$this->name}/"));
+		'TotalAmount' 		=> number_format($cart->getOrderTotal(true, 3), 2, '.', ''),
+   		'this_path' 		=> $this->_path,
+   	    'this_path_ssl' 	=> Configuration::get('PS_FO_PROTOCOL').$_SERVER['HTTP_HOST'].__PS_BASE_URI__."modules/{$this->name}/"));
 
         /*Complementos*/
         $cart=new Cart($cookie->id_cart);
@@ -202,7 +200,7 @@ class checkout extends PaymentModule
         $carrier=Carrier::getCarriers(intval($cookie->id_lang));
         if($carrier){
             foreach ($carrier as $c){
-                if($cart->id_carrier==$c[id_carrier]){
+                if($cart->id_carrier==$c['id_carrier']){
                     $smarty->assign('carrier',$c['name']);
                     break;
                 }
@@ -326,7 +324,10 @@ class checkout extends PaymentModule
 		$modAuthorizedCurrencies= $this->l('Authorized currencies');
 
 		$this->_html .=
-		"<form action='{$_SERVER['REQUEST_URI']}' method='post'>
+		"
+		<br />
+		<br />
+		<p><form action='{$_SERVER['REQUEST_URI']}' method='post'>
 			<fieldset>
 			<legend><img src='../img/admin/access.png' />{$modcheckout}</legend>
 				<table border='0' width='500' cellpadding='0' cellspacing='0' id='form'>
@@ -355,11 +356,12 @@ class checkout extends PaymentModule
 				</table>
 			</fieldset>
 		</form>
+		</p>
 		<br />
 		<br />
 		<form action='{$_SERVER['REQUEST_URI']}' method='post'>
 			<fieldset>
-			<legend><img src='../img/t/15.gif' />{$modAuthorizedCurrencies}</legend>
+			<legend>{$modAuthorizedCurrencies}</legend>
 				<table border='0' width='500' cellpadding='0' cellspacing='0' id='form'>
 					<tr>
 						<td colspan='2'>

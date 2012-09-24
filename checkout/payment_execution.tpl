@@ -1,16 +1,14 @@
-{capture name=path}{l s='Shipping'}{/capture}
-<div id="cms_block">
-	<h2>{l s='Credit Card payment Summary' mod='checkout'}</h2>
-    {l s='Buy On-Line with Credit Card, Debit Card or PayPal.' mod='checkout'}
-    </div>
-		{assign var='current_step' value='payment'}
-{include file="$tpl_dir./order-steps.tpl"}
 
-<p>
-	<img src="{$this_path}2Checkout.gif" alt="{l s='2checkout' mod='checkout'}" style="float:left; margin: 0px 10px 5px 0px;">
-	{l s='You have chosen to pay by Credit/Debit card - 2Checkout Online validation.' mod='checkout'}
-</p>
+{capture name=path}{l s='Credit Card/PayPal' mod='cheque'}{/capture}
+{include file="$tpl_dir./breadcrumb.tpl"}
 
+<h2>{l s='Order summary' mod='checkout'}</h2>
+
+{if isset($nbProducts) && $nbProducts <= 0}
+    <p class="warning">{l s='Your shopping cart is empty.'}</p>
+{else}
+
+<h3>{l s='You have chosen to pay by Credit/Debit card - 2Checkout Online validation.' mod='checkout'}</h3>
 
 <form name="checkout_confirmation" action="{$CheckoutUrl}" method="post" />
     <input type="hidden" name="lang" value="{$lang_iso}">
@@ -44,9 +42,7 @@
     {/foreach}
     
     <p>&nbsp;</p>
-    	<p>
-		<img src="{$logo}" alt="{l s='' mod='checkout'}" style="margin-bottom: 5px" />
-		<br/><br />
+    <p>
 		{l s='Here is a short summary of your order:' mod='checkout'}
 	</p>
 	<p style="margin-top:20px;">
@@ -59,17 +55,19 @@
 	
     <input type="hidden" name="email" value="{$email}" />
     <input type="hidden" name="phone" value="{$phone}" />
-    <input type="hidden" name="demo" value="{$demo}" />
 	<input type="hidden" name="secure_key" value="{$secure_key}" />
     <input type="hidden" name="x_receipt_link_url" value="{$x_receipt_link_url}" />
-    
+
     <p>
-	<b>{l s='Please confirm your order by clicking \'I confirm my order\'' mod='checkout'}.</b>
-</p>
-<br>   
-	<p class="cart_navigation">
-		<a href="{$base_dir_ssl}order.php?step=3" class="button_large">{l s='Other payment methods' mod='checkout'}</a>
-		<input type="submit" name="submitPayment" value="{l s='I confirm my order' mod='checkout'}" class="exclusive_large" />
-	</p>
+        {l s='You will be redirected to 2Checkout to complete your payment.' mod='checkout'}
+        <br /><br />
+        <b>{l s='Please confirm your order by clicking \'I confirm my order\'' mod='checkout'}.</b>
+    </p>
+    <p class="cart_navigation">
+        <input type="submit" name="submit" value="{l s='I confirm my order' mod='checkout'}" class="exclusive_large" />
+        <a href="{$link->getPageLink('order', true, NULL, "step=3")}" class="button_large">{l s='Other payment methods' mod='checkout'}</a>
+    </p>
     
 </form>
+
+{/if}
