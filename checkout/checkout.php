@@ -10,7 +10,7 @@ class checkout extends PaymentModule
 		$this->name = 'checkout';
 		$this->displayName = '2Checkout Payments';
 		$this->tab = 'payments_gateways';
-		$this->version = 0.7;
+		$this->version = 0.8;
 
 		$config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_SECRET', 'CHECKOUT_CURRENCIES'));
 

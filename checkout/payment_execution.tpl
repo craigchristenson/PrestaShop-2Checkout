@@ -1,5 +1,5 @@
 
-{capture name=path}{l s='Credit Card/PayPal' mod='cheque'}{/capture}
+{capture name=path}{l s='Credit Card/PayPal' mod='checkout'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h2>{l s='Order summary' mod='checkout'}</h2>
