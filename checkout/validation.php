@@ -8,7 +8,7 @@ $sid					= Configuration::get('CHECKOUT_SID');
 $secret_word			= Configuration::get('CHECKOUT_SECRET');
 $credit_card_processed	= $_REQUEST['credit_card_processed'];
 $order_number			= $_REQUEST['order_number'];
-$cart_id 				= $_REQUEST['cart_id'];
+$cart_id 				= $_REQUEST['merchant_order_id'];
 $secure_key             = $_REQUEST['secure_key'];
 
 $cart=new Cart($cart_id);
@@ -23,7 +23,7 @@ $compare_hash1 = strtoupper(md5($compare_string));
 $compare_hash2 = $_REQUEST['key'];
 
 if ($compare_hash1 == $compare_hash2) {
-	
+
 	$message = '2Checkout Order Number: ' . $order_number;
 	/* Create Necessary variables for order placement */
 	$currency = new Currency(intval(isset($_REQUEST['currency_payement']) ? $_REQUEST['currency_payement'] : $cookie->id_currency));
