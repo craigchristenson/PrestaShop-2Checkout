@@ -10,7 +10,7 @@ class checkout extends PaymentModule
         $this->name = 'checkout';
         $this->displayName = '2Checkout Payments';
         $this->tab = 'payments_gateways';
-        $this->version = 0.8;
+        $this->version = 0.9;
 
         $config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_SECRET', 'CHECKOUT_CURRENCIES'));
 
@@ -107,7 +107,7 @@ class checkout extends PaymentModule
         }
         //shipping
         if (_PS_VERSION_ < '1.5')
-	    $shipping = $this->context->cart->getOrderShippingCost();
+	    $shipping_cost = $cart_details['total_shipping_tax_exc'];
 	else
 	    $shipping = $this->context->cart->getTotalShippingCost();
         $check_total += $shipping;
@@ -156,7 +156,7 @@ class checkout extends PaymentModule
         $carrier = $cart_details['carrier'];
 
         if (_PS_VERSION_ < '1.5')
-	    $shipping_cost = $this->context->cart->getOrderShippingCost();
+	    $shipping_cost = $cart_details['total_shipping_tax_exc'];
 	else
 	    $shipping_cost = $this->context->cart->getTotalShippingCost();
 
