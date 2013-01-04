@@ -4,6 +4,8 @@
 
 <h2>{l s='Order summary' mod='checkout'}</h2>
 
+{assign var='current_step' value='payment'}
+
 {if isset($nbProducts) && $nbProducts <= 0}
     <p class="warning">{l s='Your shopping cart is empty.'}</p>
 {else}
@@ -14,6 +16,7 @@
     <input type="hidden" name="lang" value="{$lang_iso}">
     <input type="hidden" name="sid" value="{$sid}" />
     <input type="hidden" name="merchant_order_id" value="{$cart_order_id}" />
+    <input type="hidden" name="purchase_step" value="payment-method" />
     <input type="hidden" name="card_holder_name" value="{$card_holder_name}" />
     <input type="hidden" name="street_address" value="{$street_address}" />
     <input type="hidden" name="street_address2" value="{$street_address2}" />

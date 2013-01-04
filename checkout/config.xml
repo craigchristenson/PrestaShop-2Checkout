@@ -2,7 +2,7 @@
         <module>
             <name>checkout</name>
             <displayName><![CDATA[2Checkout Payments]]></displayName>
-            <version><![CDATA[0.8]]></version>
+            <version><![CDATA[0.9]]></version>
             <description><![CDATA[Accept payments with 2Checkout]]></description>
             <author><![CDATA[]]></author>
             <tab><![CDATA[payments_gateways]]></tab>
