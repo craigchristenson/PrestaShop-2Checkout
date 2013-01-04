@@ -39,26 +39,26 @@
         <input type="hidden" name="li_{$i}_quantity" value="{$product.quantity}" />
         <input type="hidden" name="li_{$i}_name" value="{$product.name}" />
         <input type="hidden" name="li_{$i}_description" value="{$product.description_short}" />
-        <input type="hidden" name="li_{$i}_price" value="{$product.price}" />
+        <input type="hidden" name="li_{$i}_price" value="{sprintf("%01.2f", $product.price)}" />
         {counter print=false}
         {/foreach}
         {if isset($shipping_cost)}
             {counter assign=i}
             <input type="hidden" name="li_{$i}_type" value="shipping" />
             <input type="hidden" name="li_{$i}_name" value="{$carrier}" />
-            <input type="hidden" name="li_{$i}_price" value="{$shipping_cost}" />
+            <input type="hidden" name="li_{$i}_price" value="{sprintf("%01.2f", $shipping_cost)}" />
         {/if}
         {if isset($tax)}
             {counter assign=i}
             <input type="hidden" name="li_{$i}_type" value="tax" />
             <input type="hidden" name="li_{$i}_name" value="Tax" />
-            <input type="hidden" name="li_{$i}_price" value="{$tax}" />
+            <input type="hidden" name="li_{$i}_price" value="{sprintf("%01.2f", $tax)}" />
         {/if}
         {if isset($discount)}
             {counter assign=i}
             <input type="hidden" name="li_{$i}_type" value="coupon" />
             <input type="hidden" name="li_{$i}_name" value="Discounts" />
-            <input type="hidden" name="li_{$i}_price" value="{$discount}" />
+            <input type="hidden" name="li_{$i}_price" value="{sprintf("%01.2f", $discount)}" />
         {/if}
     {else}
         {counter assign=i}
@@ -67,11 +67,11 @@
         <input type="hidden" name="c_prod_{$i}" value="{$product.id_product},{$product.quantity}" />
         <input type="hidden" name="c_name_{$i}" value="{$product.name}" />
         <input type="hidden" name="c_description_{$i}" value="{$product.description_short}" />
-        <input type="hidden" name="c_price_{$i}" value="{$product.price}" />
+        <input type="hidden" name="c_price_{$i}" value="{sprintf("%01.2f", $product.price)}" />
         {counter print=false}
         {/foreach}
     <input type="hidden" name="cart_order_id" value="{$cart_order_id}" />
-    <input type="hidden" name="total" value="{$check_total}" />
+    <input type="hidden" name="total" value="{$total}" />
     {/if}
 
     <p>&nbsp;</p>
