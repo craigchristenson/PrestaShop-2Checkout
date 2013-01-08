@@ -10,7 +10,7 @@ class checkout extends PaymentModule
         $this->name = 'checkout';
         $this->displayName = '2Checkout Payments';
         $this->tab = 'payments_gateways';
-        $this->version = 0.9;
+        $this->version = 1.0;
 
         $config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_SECRET', 'CHECKOUT_CURRENCIES'));
 
@@ -161,7 +161,6 @@ class checkout extends PaymentModule
 	    $shipping_cost = $this->context->cart->getTotalShippingCost();
 
         $CheckoutUrl	        	= 'https://www.2checkout.com/checkout/purchase';
-        $x_receipt_link_url		= 'http://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/checkout/validation.php';
         $sid				= Configuration::get('CHECKOUT_SID');
         $total				= number_format($cart->getOrderTotal(true, 3), 2, '.', '');
         $cart_order_id		        = $cart->id;
@@ -216,7 +215,6 @@ class checkout extends PaymentModule
             'ship_zip'			=> $ship_zip,
             'ship_country'		=> $ship_country,
             'products' 			=> $products,
-            'x_receipt_link_url'    	=> $x_receipt_link_url,
             'currency_code'             => $order_currency,
             'TotalAmount' 		=> number_format($cart->getOrderTotal(true, 3), 2, '.', ''),
             'this_path' 		=> $this->_path,

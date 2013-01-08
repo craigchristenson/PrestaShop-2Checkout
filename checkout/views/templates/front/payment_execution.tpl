@@ -16,6 +16,7 @@
     <input type="hidden" name="lang" value="{$lang_iso}">
     <input type="hidden" name="sid" value="{$sid}" />
     <input type="hidden" name="merchant_order_id" value="{$cart_order_id}" />
+    <input type="hidden" name="return_url" value="{$link->getPageLink('order', true, NULL, "step=3")}" />
     <input type="hidden" name="purchase_step" value="payment-method" />
     <input type="hidden" name="card_holder_name" value="{$card_holder_name}" />
     <input type="hidden" name="street_address" value="{$street_address}" />
@@ -46,19 +47,19 @@
             {counter assign=i}
             <input type="hidden" name="li_{$i}_type" value="shipping" />
             <input type="hidden" name="li_{$i}_name" value="{$carrier}" />
-            <input type="hidden" name="li_{$i}_price" value="{sprintf("%01.2f", $shipping_cost)}" />
+            <input type="hidden" name="li_{$i}_price" value="{$shipping_cost}" />
         {/if}
         {if isset($tax)}
             {counter assign=i}
             <input type="hidden" name="li_{$i}_type" value="tax" />
             <input type="hidden" name="li_{$i}_name" value="Tax" />
-            <input type="hidden" name="li_{$i}_price" value="{sprintf("%01.2f", $tax)}" />
+            <input type="hidden" name="li_{$i}_price" value="{$tax}" />
         {/if}
         {if isset($discount)}
             {counter assign=i}
             <input type="hidden" name="li_{$i}_type" value="coupon" />
             <input type="hidden" name="li_{$i}_name" value="Discounts" />
-            <input type="hidden" name="li_{$i}_price" value="{sprintf("%01.2f", $discount)}" />
+            <input type="hidden" name="li_{$i}_price" value="{$discount}" />
         {/if}
     {else}
         {counter assign=i}
@@ -71,7 +72,7 @@
         {counter print=false}
         {/foreach}
     <input type="hidden" name="cart_order_id" value="{$cart_order_id}" />
-    <input type="hidden" name="total" value="{$total}" />
+    <input type="hidden" name="total" value="{$check_total}" />
     {/if}
 
     <p>&nbsp;</p>
@@ -89,8 +90,6 @@
     <input type="hidden" name="email" value="{$email}" />
     <input type="hidden" name="phone" value="{$phone}" />
     <input type="hidden" name="currency_code" value="{$currency_code}" />
-    <input type="hidden" name="secure_key" value="{$secure_key}" />
-    <input type="hidden" name="x_receipt_link_url" value="{$x_receipt_link_url}" />
 
     <p>
         {l s='You will be redirected to 2Checkout to complete your payment.' mod='checkout'}
