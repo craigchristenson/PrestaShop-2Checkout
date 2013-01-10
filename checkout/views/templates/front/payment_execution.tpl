@@ -72,7 +72,7 @@
         {counter print=false}
         {/foreach}
     <input type="hidden" name="cart_order_id" value="{$cart_order_id}" />
-    <input type="hidden" name="total" value="{$check_total}" />
+    <input type="hidden" name="total" value="{$total}" />
     {/if}
 
     <p>&nbsp;</p>
