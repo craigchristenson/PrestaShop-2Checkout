@@ -10,14 +10,16 @@ class checkout extends PaymentModule
         $this->name = 'checkout';
         $this->displayName = '2Checkout Payments';
         $this->tab = 'payments_gateways';
-        $this->version = 1.0;
+        $this->version = 1.1;
 
-        $config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_SECRET', 'CHECKOUT_CURRENCIES'));
+        $config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_SECRET', 'CHECKOUT_DISPLAY','CHECKOUT_CURRENCIES'));
 
         if (isset($config['CHECKOUT_SID']))
             $this->SID = $config['CHECKOUT_SID'];
         if (isset($config['CHECKOUT_SECRET']))
             $this->SECRET = $config['CHECKOUT_SECRET'];
+        if (isset($config['CHECKOUT_DISPLAY']))
+            $this->DISPLAY = $config['CHECKOUT_DISPLAY'];
         if (isset($config['CHECKOUT_CURRENCIES']))
             $this->currencies = $config['CHECKOUT_CURRENCIES'];
 
@@ -64,6 +66,7 @@ class checkout extends PaymentModule
     {
         Configuration::deleteByName('CHECKOUT_SID');
         Configuration::deleteByName('CHECKOUT_SECRET');
+        Configuration::deleteByName('CHECKOUT_DISPLAY');
         Configuration::deleteByName('CHECKOUT_CURRENCIES');
         parent::uninstall();
     }
@@ -162,6 +165,7 @@ class checkout extends PaymentModule
 
         $CheckoutUrl	        	= 'https://www.2checkout.com/checkout/purchase';
         $sid				= Configuration::get('CHECKOUT_SID');
+        $display                = Configuration::get('CHECKOUT_DISPLAY');
         $total				= number_format($cart->getOrderTotal(true, 3), 2, '.', '');
         $cart_order_id		        = $cart->id;
         $email				= $customer->email;
@@ -194,6 +198,7 @@ class checkout extends PaymentModule
             'CheckoutUrl' 		=> $CheckoutUrl,
             'check_total' 		=> $check_total,
             'sid' 	    		=> $sid,
+            'display'           => $display,
             'total'			=> $total,
             'cart_order_id'		=> $cart_order_id,
             'email'	    		=> $email,
@@ -316,6 +321,7 @@ class checkout extends PaymentModule
         {
             Configuration::updateValue('CHECKOUT_SID', $_POST['SID']);
             Configuration::updateValue('CHECKOUT_SECRET', $_POST['SECRET']);
+            Configuration::updateValue('CHECKOUT_DISPLAY', $_POST['DISPLAY']);
         }
         elseif (isset($_POST['currenciesSubmit']))
         {
@@ -337,7 +343,7 @@ class checkout extends PaymentModule
     private function _displaycheckout()
     {
         $modDesc 	= $this->l('This module allows you to accept payments using 2Checkout merchant services.');
-        $modStatus	= $this->l('2Checkout\'s online banking service could be the right solution for you');
+        $modStatus	= $this->l('2Checkout\'s online payment service could be the right solution for you');
         $modconfirm	= $this->l('');
         $this->_html .= "<img src='../modules/checkout/2Checkout.gif' style='float:left; margin-right:15px;' />
                                         <b>{$modDesc}</b>
@@ -362,11 +368,12 @@ class checkout extends PaymentModule
         $modClientValueSid	    = $this->SID;
         $modClientLabelSecret	    = $this->l('Secret Word');
         $modClientValueSecret	    = $this->SECRET;
+        $modClientLabelDisplay      = $this->l('Checkout Display');
+        $modClientValueDisplay       = $this->DISPLAY;
         $modCurrencies		    = $this->l('Currencies');
         $modUpdateSettings 	    = $this->l('Update settings');
         $modCurrenciesDescription   = $this->l('Currencies authorized for 2Checkout payment');
         $modAuthorizedCurrencies    = $this->l('Authorized currencies');
-
         $this->_html .=
         "
         <br />
@@ -390,6 +397,15 @@ class checkout extends PaymentModule
                                         <td width='130'>{$modClientLabelSecret}</td>
                                         <td>
                                                 <input type='text' name='SECRET' value='{$modClientValueSecret}' style='width: 300px;' />
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td width='130'>{$modClientLabelDisplay}</td>
+                                        <td>
+                                            <input type='radio' name='DISPLAY' value='0'".(!$modClientValueDisplay ? " checked='checked'" : '')." /> Direct
+                                            <br />
+                                            <input type='radio' name='DISPLAY' value='1'".($modClientValueDisplay ? " checked='checked'" : '')." /> Dynamic
+                                            <br />
                                         </td>
                                 </tr>
                                 <tr>

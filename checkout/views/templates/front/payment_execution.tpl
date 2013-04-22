@@ -102,5 +102,8 @@
     </p>
 
 </form>
+{if ($display == '0')}
+<script type="text/javascript" src="https://www.2checkout.com/static/checkout/javascript/direct.min.js"></script>
+{/if}
 
 {/if}
