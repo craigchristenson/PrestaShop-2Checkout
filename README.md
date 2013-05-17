@@ -15,7 +15,7 @@ Integrate PrestaShop with 2Checkout
 
 1. Sign in to your 2Checkout account.
 2. Click the Account tab and Site Management subcategory.
-3. Set the Approved URL to http(s)://www.yourcarturl.com/modules/checkout/validation.php (Replace http://www.yourcarturl.com with the actual URL to your store.)
+3. Set the Approved URL to http(s)://yourcarturl.com/index.php?fc=module&module=checkout&controller=validation (Replace http://www.yourcarturl.com with the actual URL to your store.)
 4. Under Direct Return select Header Redirect.
 5. Enter your Secret Word.
 6. Click Save Changes.
