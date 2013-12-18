@@ -32,7 +32,7 @@
     <input type="hidden" name="ship_state" value="{if $ship_state}{$ship_state->name}{else}{$outside_state}{/if}" />
     <input type="hidden" name="ship_zip" value="{$ship_zip}" />
     <input type="hidden" name="ship_country" value="{$ship_country}" />
-    {if sprintf("%01.2f", $check_total) == sprintf("%01.2f", $total)}
+    {if sprintf("%01.2f", $check_total) == sprintf("%01.2f", $total) && $override_currency == 0}
         {counter assign=i}
         {foreach from=$products item=product}
         <input type="hidden" name="mode" value="2CO" />
@@ -81,7 +81,11 @@
 	</p>
 	<p style="margin-top:20px;">
 		- {l s='The total amount of your order is' mod='checkout'}
-			<span id="amount_{$currency->id}" class="price">{convertPriceWithCurrency price=$total currency=$currency}</span>
+            {if $override_currency == 0}
+                <span id="amount_{$currency->id}" class="price">{convertPriceWithCurrency price=$total currency=$currency}</span>
+            {else}
+                <span id="amount_{$override_currency->id}" class="price">{convertPriceWithCurrency price=$total currency=$override_currency}</span>
+            {/if}
 			{if $use_taxes == 1}
 			{l s='(tax incl.)' mod='checkout'}
 			{/if}
