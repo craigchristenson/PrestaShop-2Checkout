@@ -12,7 +12,7 @@ class checkout extends PaymentModule
         $this->tab = 'payments_gateways';
         $this->version = 1.1;
 
-        $config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_SECRET', 'CHECKOUT_DISPLAY','CHECKOUT_CURRENCIES'));
+        $config = Configuration::getMultiple(array('CHECKOUT_SID', 'CHECKOUT_SECRET', 'CHECKOUT_DISPLAY', 'CHECKOUT_CURRENCY','CHECKOUT_CURRENCIES'));
 
         if (isset($config['CHECKOUT_SID']))
             $this->SID = $config['CHECKOUT_SID'];
@@ -20,6 +20,8 @@ class checkout extends PaymentModule
             $this->SECRET = $config['CHECKOUT_SECRET'];
         if (isset($config['CHECKOUT_DISPLAY']))
             $this->DISPLAY = $config['CHECKOUT_DISPLAY'];
+        if (isset($config['CHECKOUT_CURRENCY']))
+            $this->CURRENCY = $config['CHECKOUT_CURRENCY'];
         if (isset($config['CHECKOUT_CURRENCIES']))
             $this->currencies = $config['CHECKOUT_CURRENCIES'];
 
@@ -67,6 +69,7 @@ class checkout extends PaymentModule
         Configuration::deleteByName('CHECKOUT_SID');
         Configuration::deleteByName('CHECKOUT_SECRET');
         Configuration::deleteByName('CHECKOUT_DISPLAY');
+        Configuration::deleteByName('CHECKOUT_CURRENCY');
         Configuration::deleteByName('CHECKOUT_CURRENCIES');
         parent::uninstall();
     }
@@ -128,7 +131,6 @@ class checkout extends PaymentModule
         global $cookie, $smarty;
 
         //Verify currencies and display payment form
-
         $cart_details = $cart->getSummaryDetails(null, true);
         $currencies = Currency::getCurrencies();
         $authorized_currencies = array_flip(explode(',', $this->currencies));
@@ -158,20 +160,21 @@ class checkout extends PaymentModule
 
         $carrier = $cart_details['carrier'];
 
-        if (_PS_VERSION_ < '1.5')
-	    $shipping_cost = $cart_details['total_shipping_tax_exc'];
-	else
-	    $shipping_cost = $this->context->cart->getTotalShippingCost();
+        if (_PS_VERSION_ < '1.5') {
+	        $shipping_cost = $cart_details['total_shipping_tax_exc'];
+        } else {
+	        $shipping_cost = $this->context->cart->getTotalShippingCost();
+        }
 
-        $CheckoutUrl	        	= 'https://www.2checkout.com/checkout/purchase';
+        $CheckoutUrl	    = 'https://www.2checkout.com/checkout/purchase';
         $sid				= Configuration::get('CHECKOUT_SID');
-        $display                = Configuration::get('CHECKOUT_DISPLAY');
-        $total				= number_format($cart->getOrderTotal(true, 3), 2, '.', '');
-        $cart_order_id		        = $cart->id;
+        $display            = Configuration::get('CHECKOUT_DISPLAY');
+        $amount				= number_format($cart->getOrderTotal(true, 3), 2, '.', '');
+        $cart_order_id		= $cart->id;
         $email				= $customer->email;
         $secure_key			= $customer->secure_key;
         $demo				= "N";	// Change to "Y" for demo mode
-        $outside_state	        	= "XX"; // This will pre-select Outside USA and Canada, if state does not exist
+        $outside_state	    = "XX"; // This will pre-select Outside USA and Canada, if state does not exist
 
         // Invoice Parameters
         $card_holder_name		= $invoice->firstname . ' ' . $invoice->lastname;
@@ -185,8 +188,8 @@ class checkout extends PaymentModule
 
         // Shipping Parameters
         $ship_name	    		= $delivery->firstname . ' ' . $invoice->lastname;
-        $ship_street_address	        = $delivery->address1;
-        $ship_street_address2	        = $delivery->address2;
+        $ship_street_address	= $delivery->address1;
+        $ship_street_address2	= $delivery->address2;
         $ship_city 		    	= $delivery->city;
         $ship_state	    		= (Validate::isLoadedObject($delivery) AND $delivery->id_state) ? new State(intval($delivery->id_state)) : false;
         $ship_zip   			= $delivery->postcode;
@@ -194,21 +197,33 @@ class checkout extends PaymentModule
 
         $check_total = $this->checkTotal($cart);
 
+        if ( Configuration::get('CHECKOUT_CURRENCY') > 0 ) {
+            $currency_from = Currency::getCurrency($cart->id_currency);
+            $currency_to = Currency::getCurrency(Configuration::get('CHECKOUT_CURRENCY'));
+            $amount = Tools::ps_round($amount / $currency_from['conversion_rate'], 2);
+            $total = Tools::ps_round($amount *= $currency_to['conversion_rate'], 2);
+            $order_currency = $currency_to['iso_code'];
+            $override_currency = $currency_to;
+        } else {
+            $total = number_format($cart->getOrderTotal(true, 3), 2, '.', '');
+            $override_currency = 0;
+        }
+
         $smarty->assign(array(
-            'CheckoutUrl' 		=> $CheckoutUrl,
-            'check_total' 		=> $check_total,
-            'sid' 	    		=> $sid,
-            'display'           => $display,
-            'total'			=> $total,
-            'cart_order_id'		=> $cart_order_id,
-            'email'	    		=> $email,
-            'outside_state'		=> $outside_state,
+            'CheckoutUrl' 		    => $CheckoutUrl,
+            'check_total' 		    => $check_total,
+            'sid' 	    		    => $sid,
+            'display'               => $display,
+            'total'			        => $total,
+            'cart_order_id'		    => $cart_order_id,
+            'email'	    		    => $email,
+            'outside_state'		    => $outside_state,
             'secure_key'		=> $secure_key,
-            'card_holder_name'		=> $card_holder_name,
-            'street_address'		=> $street_address,
-            'street_address2'		=> $street_address2,
-            'phone'			=> $phone,
-            'city' 			=> $city,
+            'card_holder_name'	=> $card_holder_name,
+            'street_address'	=> $street_address,
+            'street_address2'	=> $street_address2,
+            'phone'			    => $phone,
+            'city' 			    => $city,
             'state' 			=> $state,
             'zip'	    		=> $zip,
             'country'			=> $country,
@@ -220,10 +235,11 @@ class checkout extends PaymentModule
             'ship_zip'			=> $ship_zip,
             'ship_country'		=> $ship_country,
             'products' 			=> $products,
-            'currency_code'             => $order_currency,
-            'TotalAmount' 		=> number_format($cart->getOrderTotal(true, 3), 2, '.', ''),
+            'currency_code'     => $order_currency,
+            'override_currency' => $override_currency,
+            'TotalAmount' 		=> $total,
             'this_path' 		=> $this->_path,
-            'this_path_ssl' 	        => Configuration::get('PS_FO_PROTOCOL').$_SERVER['HTTP_HOST'].__PS_BASE_URI__."modules/{$this->name}/"));
+            'this_path_ssl' 	=> Configuration::get('PS_FO_PROTOCOL').$_SERVER['HTTP_HOST'].__PS_BASE_URI__."modules/{$this->name}/"));
 
         //shipping lineitem
         if ($shipping_cost > 0)
@@ -322,6 +338,7 @@ class checkout extends PaymentModule
             Configuration::updateValue('CHECKOUT_SID', $_POST['SID']);
             Configuration::updateValue('CHECKOUT_SECRET', $_POST['SECRET']);
             Configuration::updateValue('CHECKOUT_DISPLAY', $_POST['DISPLAY']);
+            Configuration::updateValue('CHECKOUT_CURRENCY', $_POST['CURRENCY']);
         }
         elseif (isset($_POST['currenciesSubmit']))
         {
@@ -370,10 +387,12 @@ class checkout extends PaymentModule
         $modClientValueSecret	    = $this->SECRET;
         $modClientLabelDisplay      = $this->l('Checkout Display');
         $modClientValueDisplay       = $this->DISPLAY;
+        $modClientValueCurrency       = $this->CURRENCY;
         $modCurrencies		    = $this->l('Currencies');
         $modUpdateSettings 	    = $this->l('Update settings');
         $modCurrenciesDescription   = $this->l('Currencies authorized for 2Checkout payment');
         $modAuthorizedCurrencies    = $this->l('Authorized currencies');
+        $modClientLabelCurrency      = $this->l('Force 2Checkout Currency?');
         $this->_html .=
         "
         <br />
@@ -405,6 +424,19 @@ class checkout extends PaymentModule
                                             <input type='radio' name='DISPLAY' value='0'".(!$modClientValueDisplay ? " checked='checked'" : '')." /> Direct
                                             <br />
                                             <input type='radio' name='DISPLAY' value='1'".($modClientValueDisplay ? " checked='checked'" : '')." /> Dynamic
+                                            <br />
+                                            <br />
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td width='130'>{$modClientLabelCurrency}</td>
+                                        <td>
+                                            <input type='radio' name='CURRENCY' value='0'".(!$modClientValueCurrency ? " checked='checked'" : '')." /> Use customer's currency.
+                                            <br />";
+                                            $currencies = Currency::getCurrencies();
+                                            foreach ($currencies as $currency)
+                                                $this->_html .= '<label style="float:none; "><input type="radio" name="CURRENCY" value="'.$currency['id_currency'].'"'.($modClientValueCurrency == $currency['id_currency'] ? ' checked' : '').' />&nbsp;<span style="font-weight:bold;">'.$currency['name'].'</span> ('.$currency['sign'].')</label><br />';
+                                            $this->_html .= "
                                             <br />
                                         </td>
                                 </tr>
