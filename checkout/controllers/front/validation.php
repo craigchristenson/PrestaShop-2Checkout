@@ -37,7 +37,7 @@ class CheckoutValidationModuleFrontController extends ModuleFrontController
 			$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 			$checkout->validateOrder($cart_id, _PS_OS_PAYMENT_, $total, $checkout->displayName,  '', array(), NULL, false, $customer->secure_key);
 			$order = new Order($checkout->currentOrder);
-			Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$cart->id.'&id_module='.(int)$this->module->id.'&id_order='.$checkout->currentOrder);
+			Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$cart->id.'&id_module='.(int)$this->module->id.'&id_order='.$checkout->currentOrder.'&key='.$customer->secure_key);
 		} else {
 			echo 'Hash Mismatch! Please contact the seller directly for assistance.</br>';
 			echo 'Total: '.$total.'</br>';
