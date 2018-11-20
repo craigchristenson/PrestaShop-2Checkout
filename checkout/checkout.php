@@ -298,7 +298,7 @@ class checkout extends PaymentModule
         $state = $params['objOrder']->getCurrentState();
         if ($state == _PS_OS_OUTOFSTOCK_ or $state == _PS_OS_PAYMENT_)
             $smarty->assign(array(
-                'total_to_pay' 	=> Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false, false),
+                'total_to_pay' 	=> Tools::displayPrice($params['total_to_pay'], $params['currencyObj']),
                 'status' 		=> 'ok',
                 'id_order' 		=> $params['objOrder']->id
             ));
