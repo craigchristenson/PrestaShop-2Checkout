@@ -1,0 +1,17 @@
+{
+  "name" : "2checkout/payment_module",
+  "description" : "TwoCheckout module payment for Prestashop",
+  "homepage" : "https://www.2checkout.com/about/",
+  "license" : "MIT",
+  "authors" : [
+    {
+      "name" : "2checkout",
+      "email" : "contact@2checkout.com"
+    }
+  ],
+  "require" : {
+    "php" : ">=7.1",
+    "ext-curl" : "*"
+  },
+  "type" : "prestashop-module"
+}

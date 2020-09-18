@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>twocheckout</name>
+    <displayName><![CDATA[2checkout]]></displayName>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[2checkout - Simple &amp; safe payment solutions]]></description>
+    <author><![CDATA[2Checkout]]></author>
+    <tab><![CDATA[payments_gateways]]></tab>
+	<confirmUninstall><![CDATA[Are you sure you want to uninstall 2Checkout payment modules?]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
