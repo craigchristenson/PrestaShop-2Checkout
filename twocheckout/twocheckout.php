@@ -663,7 +663,7 @@ class Twocheckout extends \PaymentModule
         /** @var \Address $invoice */
         $invoice = new Address(intval($cart->id_address_invoice));
 
-        $returnUrl = _PS_BASE_URL_ . '/index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $orderId . '&key=' . $customer->secure_key;
+        $returnUrl = _PS_BASE_URL_ . __PS_BASE_URI__ . 'index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $orderId . '&key=' . $customer->secure_key;
         $countryIsoCode = Country::getIsoById($invoice->id_country);
         $stateIsoCode = State::getNameById($invoice->id_state);
         $languageIsoCode = Language::getIsoById($order->id_lang);
