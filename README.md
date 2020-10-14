@@ -1,28 +1,25 @@
-### _[Signup free with 2Checkout and start selling!](https://www.2checkout.com/referral?r=git2co)_
+### _[Signup free with 2Checkout and start selling!](https://www.2checkout.com)_
 
-Integrate PrestaShop with 2Checkout
-----------------------------------------
+# 2Checkout and PrestaShop Module Configuration
 
-### PrestaShop Settings:
+## PrestaShop Settings:
+1. Download the 2Checkout payment module from https://github.com/2Checkout/PrestaShop-2Checkout
+2. After downloading the .zip archive, open it and extract the folder twocheckout, then archive it separately as a .zip file
+3. Sign in to your PrestaShop admin.
+4. Under Modules click Module Manager then select Upload a Module.
+5. Upload the ‘twocheckout.zip’ directory and select configure
+6. Enter your 2Checkout Account Number (2Checkout Seller ID).
+7. Enter your Private Key (2Checkout Private Key).
+8. Select one of the three Ordering Engines – Convert Plus, Inline Cart, API
+9. Select No under Sandbox Mode (Unless you are testing in the 2Checkout Sandbox).
+10. Click Update Settings.
+_**Important note:**
+a. The Seller ID is your 2Checkout Merchant Code that you can obtain by logging in to your Merchant Control Panel and navigating to Integrations → Webhooks & API.
+b. To find the Buy Link Secret Word, log in to your 2Checkout Merchant Control Panel and navigate to Integrations → Webhooks & API → Secret Word . Edit your INS Secret Word to match the Buy Link Secret Word , copy the value and paste it in the PrestaShop admin.
+c. The Secret key can be found in your 2Checkout Merchant Control Panel, right next to the Merchant Code. Copy and paste it in your PrestaShop admin._
 
-1. Clone or download and extract git@github.com:craigchristenson/PrestaShop-2Checkout.git
-2. Upload the checkout directory to the modules directory where your PrestaShop install is located on your hosting/server.
-3. Go into your PrestaShop Admin Modules/Payment Gateways area, install, enable and select 2Checkout Payments. 
-4. Click configuration and fill out your 2Checkout account number and Secret Word.
-5. Click Update Settings.
-
-### 2Checkout Settings:
-
+## 2Checkout Settings:
 1. Sign in to your 2Checkout account.
-2. Click the Account tab and Site Management subcategory.
-3. Set the Approved URL to http(s)://yourcarturl.com/index.php?fc=module&module=checkout&controller=validation (Replace http://www.yourcarturl.com with the actual URL to your store.)
-4. Under Direct Return select Header Redirect.
-5. Enter your Secret Word.
-6. Click Save Changes.
-
-**Contact 2Checkout.com directly for integration assistance.**
-
-Version: 0.8.0
-
-_This is a fork of the original module developed by Alpha Media & donated by 2flowers - www.2flowers.com._
-_Updated to work with Prestashop 1.4.x and 1.5.x
+2. Navigate to Dashboard → Integrations → IPN Settings
+3. Copy the IPN Url provided in your 2Checkout PrestaShop settings and set it as your IPN URL.
+4. Enable 'Triggers' in the IPN section. It’s simpler to enable all the triggers. Those who are not required will simply not be used.
