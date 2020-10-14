@@ -529,8 +529,11 @@ class Twocheckout extends \PaymentModule
 
         if (Configuration::get('TWOCHECKOUT_TYPE') == 2) { // api with 2payJs
             return [$this->getApiPaymentOption()];
-        } else { // inline or Convert+
-            return [$this->getInlineConvertPaymentOption()];
+        } else if (Configuration::get('TWOCHECKOUT_TYPE') == 1) { // inline
+	        return [$this->getInlinePaymentOption()];
+        }
+        else { // Convert+
+            return [$this->getConvertPaymentOption()];
         }
     }
 
@@ -558,7 +561,7 @@ class Twocheckout extends \PaymentModule
     /**
      * @return PaymentOption|void
      */
-    public function getInlineConvertPaymentOption()
+    public function getInlinePaymentOption()
     {
         if (!$this->active) {
             return;
@@ -566,10 +569,26 @@ class Twocheckout extends \PaymentModule
         $newOption = new PaymentOption();
         $newOption->setCallToActionText('Pay with 2Checkout')
                   ->setAction($this->context->link->getModuleLink($this->name, 'validation', [], true))
-                  ->setForm($this->generateForm());
+                  ->setForm($this->generateInlineForm());
 
         return $newOption;
     }
+
+	/**
+	 * @return PaymentOption|void
+	 */
+	public function getConvertPaymentOption()
+	{
+		if (!$this->active) {
+			return;
+		}
+		$newOption = new PaymentOption();
+		$newOption->setCallToActionText('Pay with 2Checkout')
+		          ->setAction($this->context->link->getModuleLink($this->name, 'validation', [], true))
+		          ->setForm($this->generateForm());
+
+		return $newOption;
+	}
 
     /**
      * 2payJS->API payment method
@@ -615,6 +634,20 @@ class Twocheckout extends \PaymentModule
 
         return $this->context->smarty->fetch('module:twocheckout/views/templates/front/payment_form.tpl');
     }
+
+	/**
+	 * generates the form for the payment option (convert+ & inline)
+	 * @return string
+	 * @throws SmartyException
+	 */
+	protected function generateInlineForm()
+	{
+		$this->context->smarty->assign([
+			'action' => $this->context->link->getModuleLink($this->name, 'validation', [], true),
+		]);
+
+		return $this->context->smarty->fetch('module:twocheckout/views/templates/hook/inline_payment_options.tpl');
+	}
 
     /**
      * generates the form for the payment option (convert+ & inline)
@@ -663,7 +696,7 @@ class Twocheckout extends \PaymentModule
         /** @var \Address $invoice */
         $invoice = new Address(intval($cart->id_address_invoice));
 
-        $returnUrl = _PS_BASE_URL_ . '/index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $orderId . '&key=' . $customer->secure_key;
+        $returnUrl = _PS_BASE_URL_ . __PS_BASE_URI__ . 'index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $orderId . '&key=' . $customer->secure_key;
         $countryIsoCode = Country::getIsoById($invoice->id_country);
         $stateIsoCode = State::getNameById($invoice->id_state);
         $languageIsoCode = Language::getIsoById($order->id_lang);

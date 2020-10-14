@@ -11,6 +11,7 @@ class TwocheckoutInlineModuleFrontController extends ModuleFrontController
      */
     public function initContent()
     {
+    	parent::initContent();
         $this->context->smarty->assign(
             [
                 'merchantId' => Configuration::get('TWOCHECKOUT_SID'),
